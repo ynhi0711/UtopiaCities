@@ -92,7 +92,7 @@ constructor(@AppModule.ApplicationContext val context: Context) :
     }
 
     companion object {
-        const val USER_DB_NAME_FILE = "utopia_cities.sqlite"
+        const val USER_DB_NAME_FILE = "utopia_cities.db"
         const val USER_DB_NAME = "utopia_cities.sqlite"
         const val USER_TABLE_NAME = "cities"
         const val USER_COLUMN_ID = "id"
