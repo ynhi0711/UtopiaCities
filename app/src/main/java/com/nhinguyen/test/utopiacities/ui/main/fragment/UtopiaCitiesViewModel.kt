@@ -14,22 +14,28 @@ import javax.inject.Inject
 class UtopiaCitiesViewModel @Inject constructor(private val repository: CityRepository) :
     BaseViewModel() {
 
-    val LIMIT_PAGE = 20
+    private val LIMIT_PAGE = 20
 
     private var page = 0
     private val _cities = MutableLiveData<ArrayList<City>>()
     val cities: LiveData<ArrayList<City>>
         get() = _cities
 
-    fun getCities(isRefresh: Boolean) {
+    fun getCities(isRefresh: Boolean, onSuccess: ((Boolean, List<City>) -> Unit)? = null) {
+        isLoading.postValue(true)
         if (isRefresh) {
             page = 0
+            _cities.value?.clear()
         } else page += 1
         repository.getCities(LIMIT_PAGE, page).let {
-            var value = _cities.value
-            if(value == null ) value = arrayListOf()
-            value.addAll(it)
-            _cities.postValue(value)
+            isLoading.postValue(false)
+            onSuccess?.invoke(isRefresh, it)
+            if (isRefresh) {
+                var value = _cities.value
+                if (value == null) value = arrayListOf()
+                value.addAll(it)
+                _cities.postValue(value)
+            }
         }
     }
 }

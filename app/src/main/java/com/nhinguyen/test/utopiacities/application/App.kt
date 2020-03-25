@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 class App : DaggerApplication() {
 
-
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {

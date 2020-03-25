@@ -16,12 +16,10 @@ import javax.inject.Singleton
 interface AppComponent : AndroidInjector<DaggerApplication> {
     @Component.Builder
     interface Builder {
-
         @BindsInstance
         fun application(app: Application): Builder
 
         fun build(): AppComponent
-
     }
 
     fun inject(app: App)

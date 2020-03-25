@@ -9,7 +9,6 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.cavice.customer.base.BaseActivity
-import com.cavice.customer.base.BaseFragmentView
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -17,7 +16,7 @@ import javax.inject.Inject
  *Created by NhiNguyen on 3/24/2020.
  */
 
-abstract class BaseFragment<T : IBaseViewModel> : DaggerFragment(), BaseFragmentView {
+abstract class BaseFragment<T : IBaseViewModel> : DaggerFragment() {
 
     @Inject
     protected lateinit var viewModel: T
@@ -70,9 +69,5 @@ abstract class BaseFragment<T : IBaseViewModel> : DaggerFragment(), BaseFragment
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    companion object {
-        const val GALLERY_REQUEST = 1001
     }
 }
