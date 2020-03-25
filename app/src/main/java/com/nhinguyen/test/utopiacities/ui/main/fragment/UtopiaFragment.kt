@@ -24,7 +24,7 @@ class UtopiaFragment : BaseFragment<UtopiaCitiesViewModel>() {
         super.initView()
         Timber.d("TAGGGG===> ,${dbHelper.getCities(10).size}")
 
-        adapter = UtopiaCitiesAdapter(viewModel.cities.value ?: ArrayList()) {
+        adapter = UtopiaCitiesAdapter(viewModel.cities.value) {
             //OnClickItem
         }
         rvCities?.adapter = adapter

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.nhinguyen.test.utopiacities.application.AppModule
 import com.nhinguyen.test.utopiacities.model.City
+import timber.log.Timber
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
@@ -26,17 +27,12 @@ constructor(
 
     val path = (context.filesDir.parent ?: "") + "/databases/" + USER_DB_NAME
 
-    init {
-        createDatabase()
-        openDatabase()
-    }
-
     fun getCities(limit: Int, page: Int = 0): List<City> {
         val offset = limit * page
         var cursor: Cursor? = null
         val listGirl = arrayListOf<City>()
         try {
-            val db = this.readableDatabase
+            val db = this.writableDatabase
             cursor = db.rawQuery("select * from $USER_TABLE_NAME LIMIT $limit OFFSET $offset", null)
 
             if (cursor?.count ?: 0 > 0) {
@@ -78,18 +74,18 @@ constructor(
         writableDatabase.execSQL("delete from $USER_TABLE_NAME")
     }
 
-    private fun openDatabase(): SQLiteDatabase {
+    fun openDatabase(): SQLiteDatabase {
         return SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE)
     }
 
     private fun copyDatabase() {
         try {
-            val `is` = context.assets.open(USER_DB_NAME)
+            val `is` = context.assets.open(USER_DB_NAME_FILE)
             val os = FileOutputStream(path)
             val buffer = ByteArray(1024)
-            var lenght = `is`.read(buffer)
-            while (lenght > 0) {
-                os.write(buffer, 0, lenght)
+            while (`is`.read(buffer) > 0) {
+                os.write(buffer)
+                Timber.d("writing>>")
             }
             os.flush()
             os.close()
@@ -110,23 +106,26 @@ constructor(
 
         checkDB?.close()
 
-        return if (checkDB != null) true else false
+        return checkDB != null
     }
 
-    private fun createDatabase() {
+    fun createDatabase() {
         val kt = checkDatabase()
         if (kt) {
             Log.d("LOG ", "connect database")
         } else {
             Log.d("LOG ", "can not connect database")
-            this.writableDatabase
+            this.readableDatabase
             copyDatabase()
         }
+        this.close()
+        openDatabase()
 
     }
 
     companion object {
-        val USER_DB_NAME = "utopia_cities.db"
+        val USER_DB_NAME_FILE = "utopia_cities.sqlite"
+        val USER_DB_NAME = "utopia_cities.sqlite"
         val USER_TABLE_NAME = "cities"
         val USER_COLUMN_ID = "id"
         val USER_COLUMN_CITY = "city"

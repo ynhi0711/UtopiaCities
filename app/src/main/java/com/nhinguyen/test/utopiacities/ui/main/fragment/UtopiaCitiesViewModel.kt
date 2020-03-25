@@ -23,12 +23,12 @@ class UtopiaCitiesViewModel @Inject constructor(private val repository: CityRepo
 
     fun getCities(isRefresh: Boolean) {
         if (isRefresh) {
-            _cities.postValue(arrayListOf())
             page = 0
         } else page += 1
         repository.getCities(LIMIT_PAGE, page).let {
-            val value = _cities.value
-            value?.addAll(it)
+            var value = _cities.value
+            if(value == null ) value = arrayListOf()
+            value.addAll(it)
             _cities.postValue(value)
         }
     }

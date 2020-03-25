@@ -12,13 +12,15 @@ import kotlinx.android.synthetic.main.item_utopia_cities.view.*
  * Created by NhiNguyen on 3/24/2020.
  */
 
-class UtopiaCitiesAdapter(private val data: ArrayList<City>, private val onClick: (City) -> Unit) :
+class UtopiaCitiesAdapter(private val data: ArrayList<City>?, private val onClick: (City) -> Unit) :
     RecyclerView.Adapter<UtopiaCitiesAdapter.UtopiaViewHolder>() {
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int = data?.size ?: 0
 
     override fun onBindViewHolder(holder: UtopiaViewHolder, position: Int) {
-        if (position < data.size) {
-            holder.bindData(data[position])
+        data?.let {
+            if (position < data.size) {
+                holder.bindData(data[position])
+            }
         }
     }
 
